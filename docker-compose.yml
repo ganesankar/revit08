@@ -9,7 +9,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - "DB=mongodb://ganesan:gansan09@ds351807.mlab.com:51807/revit08"
+      - "DB=mongodb://ganesan:ganesan09@ds351807.mlab.com:51807/revit08"
       - "CORS=1"
       - "DEBUG=express:*"
     volumes:
