@@ -2,5 +2,5 @@
 // To run locally use 'mongodb://localhost/mern-crud' instead of process.env.DB
 
 module.exports = {
-  db: process.env.DB
+  db: 'mongodb://ganesan:ganesan09@ds351807.mlab.com:51807/heroku_5zqhv4rf'
 };
