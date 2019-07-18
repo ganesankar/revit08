@@ -6,8 +6,6 @@ import io from 'socket.io-client';
 import TableUser from '../TableUser/TableUser';
 import ModalUser from '../ModalUser/ModalUser';
 
-import logo from '../../logo.svg';
-import shirts from '../../shirts.png';
 import './App.css';
 
 class App extends Component {
