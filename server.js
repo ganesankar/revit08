@@ -1,81 +1,76 @@
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const socket = require('socket.io');
+require("dotenv").config();
+require('rootpath')();
+const ejs = require('ejs');
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const passport = require("passport");
+const cookierParser = require("cookie-parser");
+const path = require("path");
 
-const config = require('./config/db');
+//ROUTES
+const studentdb = require("./routes/api/studentsdb");
+const staffdb = require("./routes/api/staffdb");
+const profiledb = require("./routes/api/profiledb");
+const usersdb = require("./routes/api/usersdb");
 
-// Use Node's default promise instead of Mongoose's promise library
-mongoose.Promise = global.Promise;
 
-// Connect to the database
-mongoose.connect(config.db);
-let db = mongoose.connection;
+//ROUTES
+require("./models/usermodel");
 
-db.on('open', () => {
-  console.log('Connected to the database.');
-});
-
-db.on('error', (err) => {
-  console.log(`Database error: ${err}`);
-});
-
-// Instantiate express
+// CONNECT TO MONGODB
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, findOneAndUpdate: true })
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
+// EXPRESS & PORT CONFIG
+// ==============================================
 const app = express();
-
-// Don't touch this if you don't know it
-// We are using this for the express-rate-limit middleware
-// See: https://github.com/nfriedly/express-rate-limit
-app.enable('trust proxy');
-
-// Set public folder using built-in express.static middleware
-app.use(express.static('public'));
-
-// Set body parser middleware
+const appAdmin = express();
+appAdmin.engine('html', ejs.renderFile);
+appAdmin.set('view engine', 'html');
+appAdmin.set('views', __dirname + '/login');
+appAdmin.use(express.static(path.join(__dirname, 'login')));
+appAdmin.use((req, res, next) => {
+    return res.sendFile(path.resolve( __dirname, 'login' , 'index.html'));
+  });
+// BODY PARSER MIDDLEWARE
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// Enable cross-origin access through the CORS middleware
-// NOTICE: For React development server only!
-if (process.env.CORS) {
-  app.use(cors());
+app.use("/uploads", express.static("uploads"));
+
+// API ROUTES
+app.use("/api", studentdb);
+app.use("/api", staffdb);
+app.use('/adminlogin', appAdmin);
+// EXPRESS MIDDLWARE
+app.use(cookierParser());
+
+// PASSPORT MIDDLEWARE
+app.use(passport.initialize());
+app.use(passport.session());
+
+// AUTH ROUTES
+app.use("/auth", usersdb);
+app.use("/auth", profiledb);
+
+//PASSPORT CONFIG
+require("./config/passport")(passport);
+// require("./config/passportGoogle")(passport);
+
+// Serve Static assets if in production
+if (process.env.NODE_ENV === "production") {
+  // Set client/build folder
+  app.use(express.static("client/build"));
+
+  app.get("/", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
 }
 
-// Initialize routes middleware
-app.use('/api/users', require('./routes/users'));
+const PORT = process.env.PORT || 5000;
 
-// Use express's default error handling middleware
-app.use((err, req, res, next) => {
-  if (res.headersSent) return next(err);
-  res.status(400).json({ err: err });
-});
-
-// Start the server
-const port = process.env.PORT || 3000;
-
-const server = app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
-
-// Set up socket.io
-const io = socket(server);
-let online = 0;
-
-io.on('connection', (socket) => {
-  online++;
-  console.log(`Socket ${socket.id} connected.`);
-  console.log(`Online: ${online}`);
-  io.emit('visitor enters', online);
-
-  socket.on('add', data => socket.broadcast.emit('add', data));
-  socket.on('update', data => socket.broadcast.emit('update', data));
-  socket.on('delete', data => socket.broadcast.emit('delete', data));
-
-  socket.on('disconnect', () => {
-    online--;
-    console.log(`Socket ${socket.id} disconnected.`);
-    console.log(`Online: ${online}`);
-    io.emit('visitor exits', online);
-  });
-});
+// START THE SERVER
+// =============================================
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

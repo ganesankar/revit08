@@ -1,77 +1,35 @@
-# REVIT 08
+Welcome to the revitnetwork2 App. A travel app built using the MERN stack with Material UI.
 
-Juggernauts Junction
-ot](screenshot.png)
+Heroku Deployment Link : https://revitnetwork2.herokuapp.com/
 
-Fork, then download or clone the repo.
-```bash
-git clone https://github.com/<your-user-name>/mern-crud.git
-```
+<p>You will need to create a .env file in your root folder with the following info : </p>
+<pre><code>
+MONGO_URI = "YOUR_OWN_MONGO_URI"
+SECRET_OR_KEY = "YOUR_OWN_SECRET"
+googleClientID = "YOUR_GOOGLECLIENTID_SECRET"
+googleClientSecret = "YOUR_GOOGLECLIENT_SECRET"
+</code></pre>
 
+Quick Start
 
-*Make sure MongoDB service is running.*
+# Install dependencies for server
 
-The *config* folder contains a file named *db.js*. Before running locally, change the value of db as seen in the code below.
-```js
-module.exports = {
-  db: 'mongodb://localhost/mern-crud'
-};
-```
-
-For the **back-end**, install the dependencies once via the terminal.
-```bash
 npm install
-```
 
-Run the *main server*. It listens on port 3000.
-```bash
-CORS=1 node server
-```
-View it on the browser.
+# Install dependencies for client
 
-<br>
+npm run client-install
 
-If you want to configure the **front-end**, go to *react-src* folder via the terminal.
+# Run the client & server with concurrently
 
-```bash
-cd react-src
-```
+npm run dev
 
-Install the dependencies required by React once.
-```bash
-npm install
-```
+# Run the Express server only
 
-Run the *development server* for React. It listens on port 4200.
-```bash
-REACT_APP_API_URL=http://localhost:3000 npm start
-```
+npm run server
 
-To make a production build, simply run on *react-src* folder via the terminal.
-```bash
-npm run build
-```
+# Run the React client only
 
-It re-creates a folder named *public* on the root directory. This is where the production-ready front-end of the web application resides.
+npm run client
 
-## Docker
-```bash
-docker-compose up
-```
-
-
-## Contribute
-Feel free to help out as I may have other work/life commitments. See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## To Do
-
-- [x] Create
-- [x] Read
-- [x] Update
-- [x] Delete
-- [x] Real-time broadcast using Socket.io
-- [x] Deploy in Heroku
-- [x] Front-end validation (HTML)
-
-## License
-* [MIT](LICENSE)
+# Server runs on http://localhost:5000 and client on http://localhost:3000
