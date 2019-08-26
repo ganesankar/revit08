@@ -1,6 +1,6 @@
-Revit 08 -   JJCET 2008 IT Batch Community Portal. Built on React.JS (Redux), Node.JS, Express.JS, MongoDB (Mongoose), Multer, Passport and Bootstrap. Optimized for Mobile devices. 
+Welcome to the MYtinerary App. A travel app built using the MERN stack with Material UI.
 
-Heroku Deployment Link : https://revit08.herokuapp.com
+Heroku Deployment Link : https://guarded-sands-60894.herokuapp.com/
 
 <p>You will need to create a .env file in your root folder with the following info : </p>
 <pre><code>

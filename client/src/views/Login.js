@@ -1,24 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-// reactstrap components
-import classnames from "classnames";
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
-  Row,
-  Col
-} from "reactstrap";
 
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   loginUser,
@@ -26,9 +9,19 @@ import {
   socialRegisterUser
 } from "../actions/authActions";
 import { GoogleLogin } from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { googleClientID } from "./../keys.js";
 
-import { GoogleLoginButton } from "react-social-login-buttons";
+import {
+  FacebookLoginButton,
+  GoogleLoginButton
+} from "react-social-login-buttons";
+import Header from "./../components/layout/Header";
+
+import CustomButton from "../components/layout/CustomButton";
+
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
 
 class Login extends Component {
   constructor() {
@@ -105,6 +98,21 @@ class Login extends Component {
 
   render() {
     const { errors } = this.state;
+    const responseFacebook = response => {
+      console.log(response);
+      let facebookData;
+      facebookData = {
+        facebookID: response.id,
+        email: response.email,
+        password: "",
+        username: response.name,
+        firstname: "",
+        lastname: "",
+        avatar: response.picture.data.url,
+        accesstoken: response.accessToken
+      };
+      this.props.socialRegisterUser(facebookData);
+    };
 
     const responseGoogle = response => {
       let googleData;
@@ -123,132 +131,118 @@ class Login extends Component {
 
     const loginComponent = (
       <React.Fragment>
-        <div className="page-header">
-          <div className="page-header-image" />
-          <div className="content">
-            <Container>
-              <Row>
-                <Col className="offset-lg-0 offset-md-3" lg="5" md="6">
-                  <Card className="card-register">
-                    <CardHeader>
-                      <CardTitle tag="h4" className="text-white">
-                        Login
-                      </CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <Form onSubmit={this.onSubmit}>
-                        <InputGroup
-                          className={classnames({
-                            "input-group-focus": this.state.emailFocus
-                          })}
-                        >
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="tim-icons icon-email-85" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            placeholder="Email"
-                            type="text"
-                            name="email"
-                            value={this.state.email}
-                            onChange={this.onChange}
-                            errorform={errors.email}
-                            onFocus={e => this.setState({ emailFocus: true })}
-                            onBlur={e => this.setState({ emailFocus: false })}
-                          />
-                          {errors.email && (
-                            <div className="invalid-feedback">
-                              {errors.email}
-                            </div>
-                          )}
-                        </InputGroup>
-                        <InputGroup
-                          className={classnames({
-                            "input-group-focus": this.state.passwordFocus
-                          })}
-                        >
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="tim-icons icon-lock-circle" />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            placeholder="Password"
-                            type="password"
-                            name="password"
-                            value={this.state.password}
-                            onChange={this.onChange}
-                            errorform={errors.password}
-                            onFocus={e =>
-                              this.setState({ passwordFocus: true })
-                            }
-                            onBlur={e =>
-                              this.setState({ passwordFocus: false })
-                            }
-                          />
-                          {errors.password && (
-                            <div>
-                              <div className="invalid-feedback">
-                                {errors.password}
-                              </div>
-                              <div className="removePhotoDiv" />
-                            </div>
-                          )}
-                        </InputGroup>
-                      </Form>
-                    </CardBody>
-                    <CardFooter>
-                      <Button
-                        type="submit"
-                        className="btn-round"
-                        color="primary"
-                        size="lg"
-                      >
-                        Get Started
-                      </Button>
+        <Header title={"Login"} />
+        <div className="itineraryCard">
+          {/* START OF FORM */}
+          <Card raised className="commentForm">
+            <form onSubmit={this.onSubmit}>
+              <div>
+                <TextField
+                  className="registerFormInput"
+                  id="outlined-with-placeholder"
+                  label="Please enter your Email:"
+                  placeholder="email:"
+                  margin="normal"
+                  variant="outlined"
+                  type="text"
+                  name="email"
+                  value={this.state.email}
+                  onChange={this.onChange}
+                  errorform={errors.email}
+                />
+              </div>
+              {errors.email && (
+                <div className="invalid-feedback">{errors.email}</div>
+              )}
+              <div>
+                <TextField
+                  className="registerFormInput"
+                  id="outlined-with-placeholder"
+                  label="Please enter your Password:"
+                  placeholder="Password:"
+                  margin="normal"
+                  variant="outlined"
+                  type="password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.onChange}
+                  errorform={errors.password}
+                />
 
-                      <GoogleLogin
-                        clientId={googleClientID}
-                        render={renderProps => (
-                          <GoogleLoginButton
-                            className="btn-round"
-                            alt="googleLogo"
-                            onClick={renderProps.onClick}
-                            align={"center"}
-                          >
-                            <span>Google</span>
-                          </GoogleLoginButton>
-                        )}
-                        buttonText="Login with Google"
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        className="btn-round"
-                        theme="dark"
-                      />
-                      <p>
-                        {" "}
-                        Currently Registration and login is disbaled, Please use
-                        google login{" "}
-                      </p>
-                    </CardFooter>
-                  </Card>
-                </Col>
-              </Row>
-            </Container>
-          </div>
+                {errors.password && (
+                  <div>
+                    <div className="invalid-feedback">{errors.password}</div>
+                    <div className="removePhotoDiv" />
+                  </div>
+                )}
+              </div>
+
+              {/* SUBMIT BUTTON */}
+              <div>
+                <CustomButton
+                  bgcolor={"#039be5"}
+                  disabled={false}
+                  title={"Submit"}
+                  type={"submit"}
+                  size={"large"}
+                  variant={"extended"}
+                  value={"submit"}
+                />
+              </div>
+              <div>*Sign Up or Register using third party services.</div>
+
+              <div className="socialDiv">
+                <div>
+                  <GoogleLogin
+                    clientId={googleClientID}
+                    render={renderProps => (
+                      <GoogleLoginButton
+                        className="googleBtn"
+                        alt="googleLogo"
+                        onClick={renderProps.onClick}
+                        align={"center"}
+                      >
+                        <span>Google</span>
+                      </GoogleLoginButton>
+                    )}
+                    buttonText="Login with Google"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    className="googleComponentBtn"
+                    theme="dark"
+                  />
+                </div>
+                <div>
+                  <FacebookLogin
+                    appId="284220635589707"
+                    callback={responseFacebook}
+                    fields="name,email,picture"
+                    render={renderProps => (
+                      <FacebookLoginButton
+                        className="facebookBtn"
+                        alt="facebookLogo"
+                        onClick={renderProps.onClick}
+                        align={"center"}
+                      >
+                        <span>Facebook</span>
+                      </FacebookLoginButton>
+                    )}
+                  />
+                </div>
+              </div>
+            </form>
+          </Card>
         </div>
       </React.Fragment>
     );
     const noAccountMessage = (
       <div>
         <p className="createAccountText">
-          {" "}
-          {/*
-            <Link to="/Signup">
+          Dont have a MYtinerary account?{" "}
+          <Link to="/Signup">
             <span className="createAccountLink">Create an account!</span>
           </Link>{" "}
-           */}
+          Its totally free and only takes a minute.
         </p>
       </div>
     );

@@ -2,63 +2,15 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { logoutUser } from "../actions/authActions";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserGraduate, faChalkboardTeacher, faCalendar, faLink} from '@fortawesome/free-solid-svg-icons';
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Container,
-  Row,
-  Col
-} from "reactstrap";
 import PropTypes from "prop-types";
 import { getCurrentProfile } from "../actions/profileActions";
 
 import { Spring } from "react-spring/renderprops";
 
+import ComplexHomeButton from "../components/layout/ComplexHomeButton";
+import CustomButton from "./../components/layout/CustomButton";
+
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      homeUserMenu: [
-        {
-          id: 1,
-          name: "Students",
-          icon: faUserGraduate,
-          url: "/students",
-          color: "primary",
-          desc: ""
-        },
-        {
-          id: 2,
-          name: "Staffs",
-          icon: faChalkboardTeacher,
-          url: "/staffs",
-          color: "success",
-          desc: ""
-        },
-        {
-          id: 3,
-          name: "Events",
-          icon: faCalendar,
-          url: "/calendar",
-          color: "info",
-          desc: ""
-        },
-        {
-          id: 4,
-          name: "Others",
-          icon: faLink,
-          url: "/others",
-          color: "warning",
-          desc: ""
-        }
-      ]
-    };
-  }
   componentDidMount() {
     if (this.props.auth.isAuthenticated === true) {
       this.props.getCurrentProfile();
@@ -73,87 +25,105 @@ class Home extends Component {
 
     const loginState = (
       <React.Fragment>
-        <Container>
-          <Row>
-            {this.state.homeUserMenu.map(menu => (
-              <Col md="3">
-                <Card className="card">
-                  <CardHeader>
-                  <FontAwesomeIcon icon={menu.icon} size="4x" className={`text-${menu.color}`}/>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                      <Col className="text-center" md="12">
-                        <h4 className="text-uppercase">{menu.name}</h4>
-                        <hr className="line-primary" />
-                      </Col>
-                    </Row>
-                  </CardBody>
-                  <CardFooter className="text-center">
-                    <NavLink to={menu.url}>
-                      <Button className="btn-simple" color={menu.color}>
-                        VIEW ALL
-                      </Button>
-                    </NavLink>
-                  </CardFooter>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Container>
+        <div className="homeParagraphText">
+          • View your favorite Itineraries in the dashboard.
+        </div>
+        <div className="homeParagraphText">
+          • Create your own Itinerary with our CMS.
+        </div>
+        <div className="homeParagraphText">
+          • Browse by #Hashtags & Comment!
+        </div>
+
+        <div className="flexIcons">
+          <div className="flexLink">
+            <NavLink to="/dashboard">
+              <CustomButton
+                bgcolor={"#039be5"}
+                disabled={false}
+                title={"Dashboard"}
+                type={"Dashboard"}
+                size={"large"}
+                variant={"extended"}
+                value={"submit"}
+              />
+            </NavLink>
+          </div>
+          <div className="flexLink">
+            <NavLink to="/cms">
+              <CustomButton
+                bgcolor={"#039be5"}
+                disabled={false}
+                title={"CMS"}
+                type={"CMS"}
+                size={"large"}
+                variant={"extended"}
+                value={"submit"}
+              />
+            </NavLink>
+          </div>
+        </div>
       </React.Fragment>
     );
     const logoutState = (
       <React.Fragment>
-        <Container>
-          <Row>
-            <Col md="4">
-              <Card className="card-coin card-plain">
-                <CardHeader>
-                  <img
-                    className="img-center img-fluid"
-                    alt=""
-                    src={require("../images/revit.png")}
-                  />
-                </CardHeader>
-                <CardBody>
-                  <Row>
-                    <Col className="text-center" md="12">
-                      <h4 className="text-uppercase">WELCOME BUDDY</h4>
-                      <hr className="line-primary" />
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter className="text-center">
-                  <NavLink to="/login">
-                    <Button className="btn-simple" color="info">
-                      LOGIN
-                    </Button>{" "}
-                  </NavLink>
-                </CardFooter>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+        <div className="paragraphText">
+          • Signup and Login to Unlock all features!
+        </div>
+
+        <div className="flexIcons">
+          <div className="flexLink">
+            <NavLink to="/login">
+              <CustomButton
+                bgcolor={"#039be5"}
+                disabled={false}
+                title={"Login"}
+                type={"Login"}
+                size={"large"}
+                variant={"extended"}
+                value={"submit"}
+              />
+            </NavLink>
+          </div>
+          <div className="flexLink">
+            <NavLink to="/signup">
+              <CustomButton
+                bgcolor={"#039be5"}
+                disabled={false}
+                title={"Sign Up"}
+                type={"Sign Up"}
+                size={"large"}
+                variant={"extended"}
+                value={"submit"}
+              />
+            </NavLink>
+          </div>
+        </div>
       </React.Fragment>
     );
 
     const homepageBody = (
       <div>
         <div>
-          <div className="page-header ">
-            <Container>
-              <div className="text-center brand">
-                <h1 className="h1-seo"> REVIT 08</h1>
-                <h3 className="d-none d-sm-block">
-                  JJCET 2008 IT BATCH STUDENTS COMMUNITY
-                </h3>
-                {isAuthenticated ? loginState : logoutState}
-              </div>
-            </Container>
+          <div>
+            <img
+              className="homeBrand"
+              alt="logo_image"
+              src={require("../images/client/MYtineraryLogo.png")}
+            />
+          </div>
+
+          <div className="paragraphText">
+            Find your perfect trip, designed by insiders who know and love their
+            cities.
+          </div>
+
+          <div className="paragraphText">
+            <ComplexHomeButton />
           </div>
 
           {/* TERNERY AUTH LOGIC */}
+          {isAuthenticated ? loginState : logoutState}
         </div>
       </div>
     );

@@ -5,22 +5,30 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { registerUser } from "../actions/authActions";
 
+import CustomButton from "../components/layout/CustomButton";
 import Header from "./../components/layout/Header";
 
-import {
-  Button,
-  FormGroup,
-  Label,
-  Input,
-  Card,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter
-} from "reactstrap";
+import Checkbox from "@material-ui/core/Checkbox";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+
+import TextField from "@material-ui/core/TextField";
+import Card from "@material-ui/core/Card";
+import Select from "@material-ui/core/Select";
+import FilledInput from "@material-ui/core/FilledInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Fab from "@material-ui/core/Fab";
 
 function Transition(props) {
-  return <div direction="up" {...props} />;
+  return <Slide direction="up" {...props} />;
 }
 
 class Signup extends Component {
@@ -126,7 +134,7 @@ class Signup extends Component {
     const { errors } = this.state;
 
     const checkboxFalseBtn = (
-      <button
+      <CustomButton
         disabled={true}
         color={"primary"}
         title={"Agree to Terms & Conditions"}
@@ -138,7 +146,7 @@ class Signup extends Component {
     );
 
     const checkboxTrueBtn = (
-      <button
+      <CustomButton
         bgcolor={"#039be5"}
         disabled={false}
         color={"primary"}
@@ -153,14 +161,12 @@ class Signup extends Component {
 
     const checkboxFalse = (
       <div>
-        <Input
-          type="checkbox"
+        <Checkbox
           value="t&c"
           color="primary"
           name="t&c_checkbox"
           onClick={this.tccheckbox}
         />
-
         <span>
           I agree to MYtinerarys{" "}
           <span className="tandc" onClick={this.handleClickOpen}>
@@ -172,7 +178,7 @@ class Signup extends Component {
 
     const checkboxTrue = (
       <div>
-        <Input type="checkbox" />
+        <Checkbox disabled color="primary" />
         <span>
           I agree to MYtinerarys{" "}
           <span className="tandc">Terms & Conditions</span>
@@ -215,6 +221,7 @@ class Signup extends Component {
             variant="contained"
           >
             Remove Image
+            <DeleteIcon />
           </Button>
         </div>
       </React.Fragment>
@@ -235,7 +242,7 @@ class Signup extends Component {
 
               {/* START OF REST OF FORM */}
               <div>
-                <Input
+                <TextField
                   className="registerFormInput"
                   id="outlined-with-placeholder"
                   label="Username:"
@@ -253,7 +260,7 @@ class Signup extends Component {
                 )}
               </div>
               <div>
-                <Input
+                <TextField
                   className="registerFormInput"
                   id="outlined-with-placeholder"
                   label="Password:"
@@ -270,7 +277,7 @@ class Signup extends Component {
                   <div className="invalid-feedback">{errors.password}</div>
                 )}
               </div>
-              <Input
+              <TextField
                 className="registerFormInput"
                 id="outlined-with-placeholder"
                 label="Confirm Password:"
@@ -287,7 +294,7 @@ class Signup extends Component {
                 <div className="invalid-feedback">{errors.password2}</div>
               )}
               <div>
-                <Input
+                <TextField
                   className="registerFormInput"
                   id="outlined-with-placeholder"
                   label="Email:"
@@ -306,7 +313,7 @@ class Signup extends Component {
                 )}
               </div>
               <div>
-                <Input
+                <TextField
                   className="registerFormInput"
                   id="outlined-with-placeholder"
                   label="First Name:"
@@ -324,7 +331,7 @@ class Signup extends Component {
                 )}
               </div>
               <div>
-                <Input
+                <TextField
                   className="registerFormInput"
                   id="outlined-with-placeholder"
                   label="Last Name:"
@@ -343,28 +350,36 @@ class Signup extends Component {
               </div>
               <div>
                 <div>
-                  <FormGroup variant="filled">
-                    <Label htmlFor="filled-country-simple">Country:</Label>
-                    <Input
-                      type="select"
+                  <FormControl variant="filled">
+                    <InputLabel htmlFor="filled-country-simple">
+                      Country:
+                    </InputLabel>
+                    <Select
                       className="selectForms"
                       value={this.state.country}
                       onChange={this.onChange}
                       errorform={errors.country}
+                      type="select"
                       name="country"
+                      input={
+                        <FilledInput
+                          name="country"
+                          id="filled-country-simple"
+                        />
+                      }
                     >
-                      <option value="">
+                      <MenuItem value="">
                         <em>None</em>
-                      </option>
-                      <option value="Spain">Spain</option>
-                      <option value="UK">UK</option>
-                      <option value="France">France</option>
-                      <option value="Germany">Germany</option>
-                      <option value="Netherlands">Netherlands</option>
-                      <option value="Ireland">Ireland</option>
-                      <option value="USA">USA</option>
-                    </Input>
-                  </FormGroup>
+                      </MenuItem>
+                      <MenuItem value="Spain">Spain</MenuItem>
+                      <MenuItem value="UK">UK</MenuItem>
+                      <MenuItem value="France">France</MenuItem>
+                      <MenuItem value="Germany">Germany</MenuItem>
+                      <MenuItem value="Netherlands">Netherlands</MenuItem>
+                      <MenuItem value="Ireland">Ireland</MenuItem>
+                      <MenuItem value="USA">USA</MenuItem>
+                    </Select>
+                  </FormControl>
                 </div>
               </div>
               {errors.country && (
@@ -377,28 +392,39 @@ class Signup extends Component {
               </div>
               {/* MODAL */}
               <div>
-                <Modal
-                  isOpen={this.state.open}
+                <Dialog
+                  open={this.state.open}
                   TransitionComponent={Transition}
                   keepMounted
-                  toggle={this.handleClose}
-                  aria-labelledby="alert-Modal-slide-title"
-                  aria-describedby="alert-Modal-slide-description"
+                  onClose={this.handleClose}
+                  aria-labelledby="alert-dialog-slide-title"
+                  aria-describedby="alert-dialog-slide-description"
                 >
-                  <ModalHeader id="alert-Modal-slide-title">
+                  <DialogTitle id="alert-dialog-slide-title">
                     {"MYtinerary Terms & Conditions"}
-                  </ModalHeader>
-                  <ModalBody>
-                    Let MYtinerary help apps determine location. This means
-                    sending anonymous data to MYtinerary, even when no apps are
-                    running.
-                  </ModalBody>
-                  <ModalFooter>
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                      Let MYtinerary help apps determine location. This means
+                      sending anonymous data to MYtinerary, even when no apps
+                      are running.
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Fab
+                      className="confirmFabButton"
+                      variant="extended"
+                      size="medium"
+                      color="primary"
+                      onClick={this.handleCloseAgree}
+                    >
+                      Agree
+                    </Fab>
                     <Button onClick={this.handleClose} color="primary">
                       Disagree
                     </Button>
-                  </ModalFooter>
-                </Modal>
+                  </DialogActions>
+                </Dialog>
               </div>
               {/* SUBMIT BUTTON */}
               <div>

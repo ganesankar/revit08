@@ -1,60 +1,31 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Collapse,
-  NavbarBrand,
-  Navbar,
-  NavItem,
-  NavLink,
-  Nav,
-  Container,
-  Row,
-  Col
-} from "reactstrap";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserGraduate,
-  faChalkboardTeacher,
-  faSignOutAlt,
-  faSignInAlt,
-  faHome
-} from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import MenuIcon from "@material-ui/icons/Menu";
+import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Avatar from "@material-ui/core/Avatar";
 
 class MenuAppBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapseOpen: false,
-      color: "navbar-transparent",
-      left: false
-    };
-  }
-  componentDidMount() {
-    window.addEventListener("scroll", this.changeColor);
-  }
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.changeColor);
-  }
-  changeColor = () => {
-    if (
-      document.documentElement.scrollTop > 99 ||
-      document.body.scrollTop > 99
-    ) {
-      this.setState({
-        color: "bg-info"
-      });
-    } else if (
-      document.documentElement.scrollTop < 100 ||
-      document.body.scrollTop < 100
-    ) {
-      this.setState({
-        color: "navbar-transparent"
-      });
-    }
+  state = {
+    left: false
+  };
+
+  toggleDrawer = open => () => {
+    this.setState({
+      left: open
+    });
   };
 
   onLogoutClick(e) {
@@ -79,55 +50,90 @@ class MenuAppBar extends React.Component {
 
     // NAVIGATION
     const loginState = (
-      <React.Fragment>
-        <NavItem className="btn btn-icon btn-simple btn-round btn-neutral MenuNavLink">
-          <NavLink href="/">
-            <FontAwesomeIcon icon={faHome} />
-          </NavLink>
-        </NavItem>
-        <NavItem className="btn btn-icon btn-simple btn-round btn-neutral MenuNavLink">
-          <NavLink href="/students">
-            <FontAwesomeIcon icon={faUserGraduate} />
-          </NavLink>
-        </NavItem>
-        <NavItem className="btn btn-icon btn-simple btn-round btn-neutral MenuNavLink ">
-          <NavLink href="/staffs">
-            <FontAwesomeIcon icon={faChalkboardTeacher} />
-          </NavLink>
-        </NavItem>
-        <NavItem className="btn btn-icon btn-simple btn-round btn-neutral MenuNavLink">
+      <div>
+        {/* <Divider /> */}
+        <ListItem button>
           <NavLink onClick={this.onLogoutClick.bind(this)} to="/">
-            <FontAwesomeIcon icon={faSignOutAlt} />
+            <Icon className="navIcon">exit_to_app</Icon>
+            <span className="navText">Log Out</span>
           </NavLink>
-        </NavItem>
-      </React.Fragment>
+        </ListItem>
+        {/* <Divider /> */}
+        <ListItem button>
+          <NavLink to="/dashboard">
+            <Icon className="navIcon">dashboard</Icon>
+            <span className="navText">Dashboard</span>
+          </NavLink>
+        </ListItem>
+        {/* <Divider /> */}
+        <ListItem button>
+          <NavLink to="/cms">
+            <Icon className="navIcon">collections</Icon>
+            <span className="navText">CMS</span>
+          </NavLink>
+        </ListItem>
+        {/* <Divider /> */}
+        {/* <ListItem button>
+          <NavLink to="/cmscity">
+            <Icon className="navIcon">edit_location</Icon>
+            <span className="navText">Create/Edit City</span>
+          </NavLink>
+        </ListItem>
+        <ListItem button>
+          <NavLink to="/cmsitinerary">
+            <Icon className="navIcon">add_to_photos</Icon>
+            <span className="navText">Create/Edit Itinerary</span>
+          </NavLink>
+        </ListItem>
+        <ListItem button>
+          <NavLink to="/cmsactivity">
+            <Icon className="navIcon">add_a_photo</Icon>
+            <span className="navText">Create/Edit Activity</span>
+          </NavLink>
+        </ListItem> */}
+      </div>
     );
 
     const logoutState = (
       <div>
-        <NavItem className="btn btn-icon btn-simple btn-round btn-neutral MenuNavLink MenuNavLink">
-          <NavLink href="/login">
-            <FontAwesomeIcon icon={faSignInAlt} />
+        <ListItem button>
+          <NavLink to="/login">
+            <Icon className="navIcon">portrait</Icon>
+            <span className="navText">Login</span>
           </NavLink>
-        </NavItem>
+        </ListItem>
+        <ListItem button>
+          <NavLink to="/signup">
+            <Icon className="navIcon">person_add</Icon>
+            <span className="navText">Create Account</span>
+          </NavLink>
+        </ListItem>
       </div>
     );
 
     const sideList = (
-      <React.Fragment>
+      <div>
         {isAuthenticated ? loginState : logoutState}
-      </React.Fragment>
+        <Divider />
+        <ListItem button>
+          <NavLink to="/cities">
+            <Icon className="navIcon">location_city</Icon>
+            <span className="navText">Cities</span>
+          </NavLink>
+        </ListItem>
+        <Divider />
+      </div>
     );
 
     // LINKS
     const authLinks = (
-      <div className="p-0">
-        <div className="p-0">
-          <NavLink to="/" className="p-0">
-            <img
+      <div>
+        <div>
+          <NavLink to="/">
+            <Avatar
               alt={user.name}
-              className="img-center img-fluid  rounded-circle menuUsrImg"
               src={user.avatar}
+              title="Gravatar and Image Files supported."
             />
           </NavLink>
         </div>
@@ -135,81 +141,40 @@ class MenuAppBar extends React.Component {
     );
     const guestLinks = (
       <div>
-        <Link
-          className="btn btn-icon btn-simple btn-round btn-neutral MenuNavLink"
-          to="/login"
-        >
-          <FontAwesomeIcon icon={faSignInAlt} />
+        <Link className="nav-link" to="/login">
+          <AccountCircle className="IconaAccountCircle" fontSize="large" />
         </Link>
       </div>
     );
 
     return (
       <div>
-        <Navbar
-          className={"fixed-top " + this.state.color}
-          color-on-scroll="100"
-          expand="lg"
-        >
-          <Container>
-            <div className="navbar-translate">
-              <NavbarBrand
-                data-placement="bottom"
-                to="/"
-                rel="noopener noreferrer"
-                title="Designed and Coded by Creative Tim"
-                tag={Link}
-              >
-                <img
-                  className="homeBrand"
-                  alt="logo_image"
-                  src={require("../../images/revit.png")}
-                />{" "}
-                <span>REVIT </span>
-              </NavbarBrand>
-              <button
-                aria-expanded={this.state.collapseOpen}
-                className="navbar-toggler navbar-toggler"
-                onClick={this.toggleCollapse}
-              >
-                <span className="navbar-toggler-bar bar1" />
-                <span className="navbar-toggler-bar bar2" />
-                <span className="navbar-toggler-bar bar3" />
-              </button>
-            </div>
-            <Collapse
-              className={"justify-content-end " + this.state.collapseOut}
-              navbar
-              isOpen={this.state.collapseOpen}
-              onExiting={this.onCollapseExiting}
-              onExited={this.onCollapseExited}
-            >
-              <div className="navbar-collapse-header">
-                <Row>
-                  <Col className="collapse-brand" xs="6">
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                      REVIT
-                    </a>
-                  </Col>
-                  <Col className="collapse-close text-right" xs="6">
-                    <button
-                      aria-expanded={this.state.collapseOpen}
-                      className="navbar-toggler"
-                      onClick={this.toggleCollapse}
-                    >
-                      <i className="tim-icons icon-simple-remove" />
-                    </button>
-                  </Col>
-                </Row>
-              </div>
-              <Nav navbar>
-                {sideList}
+        <AppBar className="appBar" position="fixed" color="default">
+          <Toolbar className="toolBarFlex">
+            <div>{isAuthenticated ? authLinks : guestLinks}</div>
 
-                {authLinks}
-              </Nav>
-            </Collapse>
-          </Container>
-        </Navbar>
+            <div>
+              <IconButton aria-label="Menu" onClick={this.toggleDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+
+              <SwipeableDrawer
+                open={this.state.left}
+                onClose={this.toggleDrawer(false)}
+                onOpen={this.toggleDrawer(true)}
+              >
+                <div
+                  tabIndex={0}
+                  role="button"
+                  onClick={this.toggleDrawer(false)}
+                  onKeyDown={this.toggleDrawer(false)}
+                >
+                  {sideList}
+                </div>
+              </SwipeableDrawer>
+            </div>
+          </Toolbar>
+        </AppBar>
       </div>
     );
   }

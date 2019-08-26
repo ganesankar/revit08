@@ -5,6 +5,7 @@ const passport = require("passport");
 
 //  Load User model
 const User = require("../../models/usermodel");
+const Itinmodel = require("../../models/itinerarymodel");
 
 // GET USER INFO
 //-------------------------------------------------------------

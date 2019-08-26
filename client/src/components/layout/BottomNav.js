@@ -1,54 +1,68 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import {
-  
-  NavItem,
-  NavLink,
-  Nav,
-  Container,
-  Row,
-  Col,
-  
-} from "reactstrap";
+import { withStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import IconHome from "./IconHome";
+import IconBackbutton from "./IconBackbutton";
+import IconCity from "./IconCity";
+import IconDashboard from "./IconDashboard";
+import Toolbar from "@material-ui/core/Toolbar";
 
-
+const styles = theme => ({
+  text: {
+    paddingTop: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2
+  },
+  paper: {
+    paddingBottom: 50
+  },
+  list: {
+    marginBottom: theme.spacing.unit * 2
+  },
+  subHeader: {
+    backgroundColor: theme.palette.background.paper
+  },
+  appBar: {
+    top: "auto",
+    bottom: 0
+  },
+  toolbar: {
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  fabButton: {
+    position: "absolute",
+    zIndex: 1,
+    top: -30,
+    left: 0,
+    right: 0,
+    margin: "0 auto"
+  }
+});
 
 function BottomAppBar(props) {
+  const { classes } = props;
 
   return (
     <React.Fragment>
-       <footer className="footer">
-        <Container>
-          <Row>
-            <Col md="12">
-            <Nav>
-                <NavItem>
-                  <NavLink to="/" tag={Link}>
-                    Home
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink to="/students" tag={Link}>
-                    Students
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink to="/staffs" tag={Link}>
-                    Staffs
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink to="/events" tag={Link}>
-                    Events
-                  </NavLink>
-                </NavItem>
-              </Nav>
-            </Col>
-            
-          </Row>
-        </Container>
-      </footer>
+      <div className="bottomNav" />
+      <AppBar position="fixed" color="default" className={classes.appBar}>
+        <Toolbar className="toolBarFlex">
+          <div>
+            <IconBackbutton />
+          </div>
+          <div>
+            <IconHome />
+          </div>
+          <div>
+            <IconDashboard />
+          </div>
+          <div>
+            <IconCity />
+          </div>
+        </Toolbar>
+      </AppBar>
     </React.Fragment>
   );
 }
@@ -57,4 +71,4 @@ BottomAppBar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default BottomAppBar;
+export default withStyles(styles)(BottomAppBar);

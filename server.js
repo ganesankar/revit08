@@ -1,6 +1,4 @@
 require("dotenv").config();
-require('rootpath')();
-const ejs = require('ejs');
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -9,31 +7,25 @@ const cookierParser = require("cookie-parser");
 const path = require("path");
 
 //ROUTES
-const studentdb = require("./routes/api/studentsdb");
-const staffdb = require("./routes/api/staffdb");
+const citydb = require("./routes/api/citydb");
+const itinerarydb = require("./routes/api/itinerarydb");
+const activitydb = require("./routes/api/activitydb");
+const commentdb = require("./routes/api/commentdb");
+const cmsdb = require("./routes/api/cmsdb");
 const profiledb = require("./routes/api/profiledb");
 const usersdb = require("./routes/api/usersdb");
-
-
-//ROUTES
 require("./models/usermodel");
 
 // CONNECT TO MONGODB
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, findOneAndUpdate: true })
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
+
 // EXPRESS & PORT CONFIG
 // ==============================================
 const app = express();
-const appAdmin = express();
-appAdmin.engine('html', ejs.renderFile);
-appAdmin.set('view engine', 'html');
-appAdmin.set('views', __dirname + '/login');
-appAdmin.use(express.static(path.join(__dirname, 'login')));
-appAdmin.use((req, res, next) => {
-    return res.sendFile(path.resolve( __dirname, 'login' , 'index.html'));
-  });
+
 // BODY PARSER MIDDLEWARE
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,9 +33,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/uploads", express.static("uploads"));
 
 // API ROUTES
-app.use("/api", studentdb);
-app.use("/api", staffdb);
-app.use('/adminlogin', appAdmin);
+app.use("/api", citydb);
+app.use("/api", itinerarydb);
+app.use("/api", activitydb);
+app.use("/api", commentdb);
+app.use("/api", cmsdb);
+
 // EXPRESS MIDDLWARE
 app.use(cookierParser());
 
@@ -64,7 +59,7 @@ if (process.env.NODE_ENV === "production") {
   // Set client/build folder
   app.use(express.static("client/build"));
 
-  app.get("/", (req, res) => {
+  app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
