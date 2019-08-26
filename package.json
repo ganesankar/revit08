@@ -7,8 +7,12 @@
     "url": "git+https://github.com/ganesankar/revitnetwork2.git"
   },
   "engines": {
+<<<<<<< HEAD
     "node": "8.11.3",
 	"npm": "6.5.0"
+=======
+    "node": "10.3.0"
+>>>>>>> 4c111c4416bc9e5e2039834c8ad7ffb749a3dae4
   },
   "private": true,
   "dependencies": {
