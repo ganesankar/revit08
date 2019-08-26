@@ -7,8 +7,9 @@
     "url": "git+https://github.com/ganesankar/revitnetwork2.git"
   },
   "engines": {
-    "node": "10.3.0"
-  }
+    "node": "8.11.3",
+	"npm": "6.5.0"
+  },
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
@@ -51,7 +52,8 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+	"postinstall": "ng build --aot --target=production"
   },
   "eslintConfig": {
     "extends": "react-app"
