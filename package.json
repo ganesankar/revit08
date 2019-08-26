@@ -10,7 +10,6 @@
 
     "node": "8.11.3",
 	"npm": "6.5.0"
-    "node": "10.3.0"
   },
   "private": true,
   "dependencies": {
